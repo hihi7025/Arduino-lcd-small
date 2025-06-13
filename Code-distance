@@ -1,0 +1,37 @@
+#include <LiquidCrystal.h>
+
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2, trig = 9, echo = 10;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+void setup() {
+  lcd.begin(16, 2);
+  Serial.begin(9600);
+  pinMode(trig, OUTPUT);
+  pinMode(echo, INPUT);
+}
+
+void loop() {
+  digitalWrite(trig, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig, LOW);
+
+  float pulseWidth = pulseIn(echo, HIGH);
+  Serial.print("Pulse Width: ");
+  Serial.println(pulseWidth, 1);
+
+  float distance_cm = pulseWidth / 29 / 2;
+  Serial.print("Dist: ");
+  Serial.println(distance_cm, 1);
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Dist: ");
+  lcd.setCursor(7, 0);
+  lcd.print(distance_cm, 1);
+  lcd.setCursor(13, 0);
+  lcd.print("cm");
+
+  delay(500);
+}
